@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/BottleHistory.css">
+    <title>Bottle History</title>
+</head>
+<body>
+    <!-- back button to home page -->
+    <div class="top-bar">
+        <div id="back-btn">
+            <img src="../static/images/wheel.png" alt="back button">
+        </div>
+    </div>
+
+    <h2>Bottles you sent out to sea:</h2>
+    <div id="bottles-container">
+        <!-- bottle message will display here -->
+    </div>
+
+    <!-- Bootstrap modal -->
+    <div class="modal fade" id="repliesModal" tabindex="-1" role="dialog" aria-labelledby="repliesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="repliesModalLabel">Bottle Replies</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="replies-content">
+                    <!-- reply message will display here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery, bootstrap, axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../static/Interceptor.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+<script>
+    // get bottle history and display
+    let lastLoadedTime = new Date().toISOString();
+    $(document).ready(function() {
+        axios.post('/api/bottlemessage/dropped', {
+            time: lastLoadedTime
+        }).then(response => {
+            displayBottles(response.data.dropped_bottles);
+            console.log(response.data)
+        }).catch(error => {
+            console.error("Error fetching bottle history: ", error);
+        });
+    });
+
+    // display bottle history
+    function displayBottles(bottles) {
+        const container = document.getElementById("bottles-container");
+        bottles.forEach(bottle => {
+            const bottleBtn = document.createElement("div");
+            bottleBtn.className = "bottle-btn";
+            bottleBtn.innerText = bottle.message_content;
+            bottleBtn.onclick = () => showReplies(bottle.ocean_messageID);
+            container.appendChild(bottleBtn);
+        });
+    }
+
+    function requestFriend(replyID) {
+        axios.post('/api/request_friend', {
+            replyID: replyID
+        }).then(response => {
+            console.log(response.data.message);
+            alert("Friend request sent!");
+        }).catch(error => {
+            console.error("Error sending friend request: ", error.response.data.error);
+            alert("Failed to send friend request.");
+        });
+    }
+
+    // display reply
+    function showReplies(messageID) {
+        axios.post('/api/bottlemessage/' + messageID + '/replies', {
+            time: lastLoadedTime
+        }).then(response => {
+            const replies = response.data.bottle_replies;
+            const modalBody = document.getElementById("replies-content");
+            modalBody.innerHTML = ""; // clean box
+            if (replies.length > 0) {
+                replies.forEach(reply => {
+                    // Create paragraph for reply content
+                    const replyPara = document.createElement('p');
+                    replyPara.innerText = reply.reply_content;
+                    modalBody.appendChild(replyPara);
+
+                    // Create Request Friend button
+                    const friendButton = document.createElement('button');
+                    friendButton.className = 'btn btn-primary'; // Bootstrap button class
+                    friendButton.innerText = 'Request Friend';
+                    friendButton.onclick = function() {
+                        requestFriend(reply.user_ID);
+                    };
+                    modalBody.appendChild(friendButton);
+                });
+            } else {
+                modalBody.innerHTML = "<p>No reply</p>";
+            }
+            $('#repliesModal').modal('show');
+        }).catch(error => {
+            const modalBody = document.getElementById("replies-content");
+            modalBody.innerHTML = ""; // clean box
+            modalBody.innerHTML = `<p>${error.response.data.error}</p>`;
+            $('#repliesModal').modal('show');
+            console.error("Error fetching replies: ", error.response.data.error);
+        });
+    }
+
+</script>
+<script>
+    document.getElementById("back-btn").addEventListener("click", function() {
+        window.location.href= '/ocean';
+    });
+</script>
+</html>

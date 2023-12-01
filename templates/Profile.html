@@ -1,0 +1,74 @@
+<!-- profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="../static/Standard.css">
+    <style>
+        /* Added CSS styles */
+        #settings-btn {
+            position: fixed; /* Fixed position relative to the viewport */
+            top: 10px; /* 10 pixels from the top */
+            right: 10px; /* 10 pixels from the right side */
+            border: none; /* No border */
+            background-color: transparent; /* Transparent background */
+        }
+
+        #edition-btn {
+            position: block;
+            margin: -2rem;
+            float: right;
+            height: 5rem;
+            width: 5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id = "back-btn">
+        <img src="../static/images/wheel.png" alt="back button">
+    </div>
+    <div class="main-card">
+        <div id = "edition-btn">
+            <img src="../static/images/icons8-quill-64.png" alt="back button">
+        </div>
+        <h1>Profile</h1>
+        <hr>
+        <strong>Username:</strong> <span id="username"></span><br>
+        <strong>Email:</strong> <span id="email"></span><br>
+        <strong>First Name:</strong> <span id="firstname"></span><br>
+        <strong>Last Name:</strong> <span id="lastname"></span>
+    </div>
+    <script>
+        document.getElementById("back-btn").addEventListener("click", function() {
+            window.location.href= '/homepage';
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../static/Interceptor.js"></script>
+    <script>
+        axios({
+            url: '/api/userinfo',
+            method: 'GET',
+        }).then(result => {
+            console.log(result.data);
+
+            // Update the profile fields with the response data
+            document.getElementById('username').textContent = result.data.username || 'N/A';
+            document.getElementById('email').textContent = result.data.email || 'N/A';
+            document.getElementById('firstname').textContent = result.data.first_name || 'N/A';
+            document.getElementById('lastname').textContent = result.data.last_name || 'N/A';
+        }).catch(error => {
+            console.error("Error fetching user info: ", error.response.data.error);
+            alert(`${error.response.data.error}`);
+        });
+    </script>
+    <script>
+         document.getElementById("edition-btn").addEventListener("click", function() {
+            window.location.href= '/edition';
+        })
+    </script>
+</body>
+</html>

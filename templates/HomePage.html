@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" type="text/css" href="../static/Standard.css">
+    <style>
+        #profile-btn {
+            position: block;
+            top: -1rem;
+            float: right;
+            height: 5rem;
+            width: 5rem;
+            cursor: pointer;
+        }
+
+        .inward-mode .main-card #message-button,
+        .inward-mode .main-card .group-button {
+            background-color: #e0dcc9;
+            cursor: not-allowed;
+            box-shadow: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <div id = "profile-btn">
+            Profile
+        </div>
+        <h1>Home Page</h1>
+        <hr>
+        <button id="mode-button">Mode</button>
+        <button id="logout">logout</button>
+        <hr>
+        <button id="ocean-button">Ocean</button> 
+        <button id="message-button">Messages</button>
+    </div>
+    
+    <script src="../static/HomePage.js"></script>
+    <script>
+         document.getElementById("profile-btn").addEventListener("click", function() {
+            window.location.href = '/profile';
+         })
+         document.getElementById("ocean-button").addEventListener("click", function() {
+            window.location.href = '/ocean';
+         })
+         document.getElementById("message-button").addEventListener("click", function() {
+            window.location.href = '/message';
+         })
+         document.getElementById("logout").addEventListener("click", function() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            window.location.href = '/';
+         })
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../static/Interceptor.js"></script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+@import url('https://fonts.googleapis.com/css2?family=Macondo&family=Raleway&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fondamento&display=swap');
+
+:root {
+    --bg_white: #f3f6f2;
+    --light_blue: #b2d1d6;
+    --paper: #e0dcc9;
+    --red: #cb3032;
+    --dark_blue: #32586b;
+}
+
+/* Reset some default styles */
+body, h1, p, button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-image: url("../static/images/ocean_background.png");
+    background-size: 100vw 100vh;
+}
+
+/* Style the header */
+header {
+    text-align: center;
+    padding: 10px;
+}
+
+/* Style the main container */
+
+
+/* Style the ocean background */
+
+.ocean-background {
+    position: absolute;
+    display: flex;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    justify-content: center;
+    height: 20vh;
+}
+
+
+.ui-block {
+    position: relative;
+    display: block;
+    margin: 100px;
+    width: 50%;
+    height: 150%;
+}
+
+.ui-block-bottom {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* Style the button container */
+.button-container {
+    margin-left: 2rem;
+    display: inline-block;
+    padding-right: 3%;
+}
+
+button {
+    display: inline;
+    background-color: var(--bg_white);
+    color: var(--dark_blue);
+    padding: 0.3rem;
+    font-size: 1.3rem;
+    margin: 0.4rem;
+    border-radius: 0.3rem;
+    transition: 250ms;
+    cursor: pointer;
+    box-shadow: var(--dark_blue) 2px 2px 2px;
+    border: 2px solid var(--dark_blue);
+}
+
+input {
+    background-color: var(--bg_white);
+    border: none;
+    font-size: 1.1rem;
+    width: 100%;
+    border-radius: 0.3rem;
+    padding-left: 0.5rem;
+}
+
+button:hover {
+    background-color: var(--dark_blue);
+    color: var(--bg_white);
+    rotate: -3deg;
+    scale: 1.04;
+}
+
+.message-display {
+    position: relative; /* For absolute positioning of child elements */
+    display: block;
+    padding: 3%;
+    z-index: 1; /* Lower z-index than bottle-message-area */
+}
+
+.overlay-front {
+    position: absolute; 
+    display: flex;
+    align-content: top center;
+    justify-content: center;
+    padding: 5%;
+    z-index: 1;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    z-index: 2;
+}
+
+.overlay-back {
+    background-color: black;
+    filter: opacity(0.5);
+    position: absolute; 
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    z-index: 2;
+}
+
+.overlay {
+    pointer-events: none;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 0.4s;
+}
+
+.note-text {
+    box-sizing: border-box;
+    background-image: url("../static/images/note_sprite.png");
+    filter: drop-shadow(5px 5px 5px);
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 90vw;
+    min-width: 57vw;
+    height: 70vh;
+    padding: 8vh;
+    margin-bottom: 5%;
+    background-size: 100% 100%;
+    text-wrap: wrap;
+    font-size: 32px;
+    font-family: 'Macondo', cursive;
+}
+
+textarea {
+    width: 97%;
+    height: 100px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+}
+
+#message-textbox {
+    display: inline;
+    background-color: #FFFFFF60;
+    color: black;
+    padding: 0.3rem;
+    font-size: 1.3rem;
+    margin: 0.4rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    box-shadow: var(--dark_blue) 2px 2px 2px;
+    border: 2px solid var(--dark_blue);
+}
+
+/* Style the "Done" button within the message display */
+#done-button {
+    background-color: #00cc77;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 4%;
+}
+
+#done-button:hover {
+    background-color: #009955;
+}
+
+/* Style the dropped bottles history */
+.dropped-bottles-history {
+    display: none; /* Initially hidden */
+    max-height: 300px;
+    overflow-y: auto;
+    
+}
+
+#shoreline {
+    position:absolute;
+    display: flex;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    justify-content: center;
+    padding-top: 5vw;
+    height: 20vh;
+}
+
+@keyframes wash-ashore {
+    from {
+        opacity: 0;
+        ;
+    }
+    to { opacity: 1;}
+}
+
+.bottle-icon {
+    height: 10vh;
+    opacity: 0.0;
+    width: 10vh;
+    transition: 0.3s cubic-bezier(0.64, 0.57, 0.67, 1.53);
+    transform-origin: bottom left;
+    animation: wash-ashore 1.0s ease-in 0.2s;
+    animation-fill-mode: forwards;
+}
+
+.bottle-icon:hover, .bottle-icon:focus {
+    rotate: -5deg;
+    cursor: pointer;
+}
+
+
+#back-btn {
+    position: absolute;
+    margin: 2rem;
+    float: left;
+    left: 0px;
+    height: 4rem;
+    width: 4rem;
+    transition: 2s ease-in-out;
+    cursor: pointer;
+}
+#back-btn > img{
+    fill: var(--dark_blue);
+    height: 100%;
+    width: 100%;
+}
+#back-btn:hover {
+    transform: rotate(360deg);
+}
+
+.drop-reflection-area {
+    text-align: center;
+    color: #fff;
+    margin: 10px 0;
+    padding: 5px;
+    border-radius: 4px;
+    display: none; 
+}
+
+.bottle-message-area {
+    color: #fff;
+    margin: 0 auto; /* Centering */
+    padding: 3px;
+    border-radius: 4px;
+    display: none; /* Initially hidden, will be shown dynamically */
+    background-color: rgba(0, 0, 0, 0.6); /* Optional: Add background for visibility */
+    width: 80%; /* Set a width */
+    max-height: 150px; /* Maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    position: absolute; /* Positioning relative to the parent */
+    left: 50%; /* Centering horizontally */
+    top: 10%; /* Adjust the top as needed */
+    transform: translateX(-50%); /* Fine-tune horizontal centering */
+    z-index: 2; /* Ensure it's above other elements */
+}
+
+.success {
+    background-color: #4CAF50;
+}
+
+.error {
+    background-color: #f44336;
+}

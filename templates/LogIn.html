@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../static/Standard.css">
+</head>
+<body>
+    <div class="main-card">
+        <h1>Login</h1>
+        <hr>
+        <form id="login-form">
+            <input type="text" name="username" id="username" placeholder="Username">
+            <br>
+            <input type="password" name="password" id="password" placeholder="Password">
+            <hr>
+            <!-- ... Your login form inputs ... -->
+            <button type="button" id="login-button">Login</button>
+            <button type="reset">Reset</button>
+            <br><br>
+            <div style="text-align: center;">
+                <small style="align-self: center;">Don't have an account yet?</small>
+                <br>
+                <button type="button" id="create-user">Create account</a></button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Include the Axios library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        // Handle the login button click event
+        document.getElementById("login-button").addEventListener("click", function() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            axios({
+                url: '/api/login',
+                method: 'POST',
+                data: {
+                    username: username,
+                    password: password
+                }
+            }).then(result => {
+                // Store the access_token in the localStorage
+                localStorage.removeItem('access_token');
+                localStorage.setItem('access_token', result.data.access_token);
+                localStorage.removeItem('refresh_token');
+                localStorage.setItem('refresh_token', result.data.refresh_token);
+                window.location.href = `/homepage`;
+            }).catch(error => {
+                alert(`${error.response.data.error}`);
+            });
+        });
+
+        document.getElementById("create-user").addEventListener("click", function() {
+            window.location.href = '/createuser';
+        });
+    </script>
+</body>
+</html>
+

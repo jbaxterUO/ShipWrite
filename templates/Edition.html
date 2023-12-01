@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Profile</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="../static/Standard.css">
+    <style>
+        #messageBox {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+        }
+        .success {
+            background-color: #4CAF50; /* green */
+        }
+        .error {
+            background-color: #cb3032; /* red */
+        }
+    </style>
+    
+</head>
+<body>
+    
+    <div class="main-card">
+
+        <div id="messageBox" style="display:none;"></div>
+        <h2>Update Profile</h2>
+        
+        <form id="updateForm">
+            <label for="email">New Email:</label><br>
+            <input type="email" id="email" name="email"><br>
+        
+            <label for="phone">New Phone:</label><br>
+            <input type="text" id="phone" name="phone"><br>
+        
+            <label for="fname">New First Name:</label><br>
+            <input type="text" id="fname" name="first_name"><br>
+        
+            <label for="lname">New Last Name:</label><br>
+            <input type="text" id="lname" name="last_name"><br>
+        
+            <label for="password">New Password:</label><br>
+            <input type="password" id="password" name="password" placeholder="********"><br>
+            
+            <input type="button" value="Update" onclick="updateUserInfo()">
+            <button id="profile-btn">Back</button>
+        </form>
+    </div>
+
+    <!-- back button to home page -->
+    <div id = "back-btn">
+        <img src="../static/images/wheel.png" alt="back button">
+    </div>
+    <script>
+    document.getElementById("back-btn").addEventListener("click", function() {
+        window.location.href= '/homepage';
+    });
+    </script>
+    
+    <!-- interceptor and token refresh -->
+    <script src="../static/Interceptor.js"></script>
+
+    <script>
+        function getUserInfo() {
+        axios.get('/api/userinfo')
+            .then(function (response) {
+                const userInfo = response.data;
+                console.log(userInfo);
+                document.getElementById('email').value = userInfo.email;
+                document.getElementById('phone').value = userInfo.phone;
+                document.getElementById('fname').value = userInfo.first_name;
+                document.getElementById('lname').value = userInfo.last_name;
+            })
+            .catch(function (error) {
+                console.error("Error fetching user info:", error.response.data.error);
+            });
+        }
+
+        function updateUserInfo() {
+            var formData = {
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                first_name: document.getElementById('fname').value,
+                last_name: document.getElementById('lname').value,
+            };
+
+            if (document.getElementById('password').value != "") {
+                formData.password = document.getElementById('password').value;
+            }
+
+            axios.post('/api/updateuserinfo', formData)
+                .then(function (response) {
+                    console.log(response);
+                    displayMessage(response.data.message, "success");
+                    setTimeout(function() { window.location.href = '/profile'; }, 2000);
+                })
+                .catch(function (error) {
+                    displayMessage(error.response.data.error, "error");
+                });
+        }
+
+        function displayMessage(message, type) {
+            var messageBox = document.getElementById('messageBox');
+            messageBox.innerHTML = message;
+            messageBox.className = type;
+            messageBox.style.display = "block";
+        }
+        window.onload = getUserInfo;
+    </script>
+
+</body>
+</html>
