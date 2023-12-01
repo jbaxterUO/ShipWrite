@@ -1,15 +1,30 @@
 import mysql.connector
 from datetime import datetime
-from usermanager import UserManager
-from connection_pool import ConnectionPool
 import random
+from decouple import config
+
+class ConnectionPool:
+    @staticmethod
+    def create_pool(pool_size_passed=5):
+        db_config = {
+            "user": config('DB_USER'),
+            "password": config('DB_PASSWORD'),
+            "host": config('DB_HOST'),
+            "database": config('DB')
+        }
+
+        connection_pool = mysql.connector.pooling.MySQLConnectionPool(
+            pool_name="connection_pool", pool_size=pool_size_passed, pool_reset_session=True, **db_config)
+
+        return connection_pool
+
 
 
 class DataBase:
 
     # Create pool of connections so they can be reused without having to open and close for each transaction
-    def __init__(self, connection_pool) -> None:
-        self.connection_pool = connection_pool
+    def __init__(self) -> None:
+        self.connection_pool = ConnectionPool.create_pool(5)
     
     def _execute_db_modification(self, modification_query: str, values: str=None) -> bool or None:
         try:

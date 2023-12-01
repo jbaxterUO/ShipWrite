@@ -2,7 +2,6 @@ from flask import Flask
 from flask import request, url_for, redirect, Blueprint, flash, jsonify, make_response
 from flask import render_template
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity, create_refresh_token
-from connection_pool import ConnectionPool
 from database import DataBase
 from usermanager import UserManager
 from decouple import config
@@ -18,8 +17,7 @@ app.config['JWT_SECRET_KEY'] = config(
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=15)
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(minutes=30)
 jwt = JWTManager(app)
-connection_pool = ConnectionPool.create_pool(10)
-database = DataBase(connection_pool)
+database = DataBase()
 usermanager = UserManager(database)
 
 
