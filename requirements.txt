@@ -7,3 +7,4 @@ datetime
 pyjwt
 python-decouple
 pytest
+gunicorn
